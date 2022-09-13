@@ -1,0 +1,59 @@
+package at.htl.geheimsprache.boundary;
+
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.common.http.TestHTTPResource;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.*;
+
+@QuarkusTest
+class PigLatinResourceTest {
+
+    @TestHTTPEndpoint(PigLatinResource.class)
+    @TestHTTPResource
+    URL url;
+
+    @Test
+    public void getEncode() throws IOException {
+//        try (InputStream in = url.openStream()) {
+//                    String contents = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+//                    Assertions.assertEquals("hello", contents);
+
+        String output =
+                given()//.accept("text/plain")
+                        .get("secret/encode?text=hallo")
+                .then()
+                .statusCode(200)
+        .extract().as(String.class);
+
+        assertThat(output).isEqualTo("allohay");
+
+        }
+
+
+//    @Test
+//    public void getDecode() throws IOException {
+//        try (InputStream in = url.openStream()) {
+//            String contents = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+//            Assertions.assertEquals("hello", contents);
+//
+//        }
+//    }
+}
+
